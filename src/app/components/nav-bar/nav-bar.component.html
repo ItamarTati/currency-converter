@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-button [matMenuTriggerFor]="menu" *ngIf="isSmallScreen">
+      <mat-icon class="menu-icon">menu</mat-icon>
+    </button>
+    <span>Itamar Tati</span>
+  </mat-toolbar-row>
+  <mat-toolbar-row class="menu-items" *ngIf="!isSmallScreen || isMenuOpen">
+    <button mat-button routerLink="/latest" routerLinkActive="active">Latest Exchange Rate</button>
+    <button mat-button routerLink="/historical" routerLinkActive="active">Historical Exchange Rate</button>
+    <button mat-button routerLink="/convert" routerLinkActive="active">Convert Currency</button>
+    <button mat-button routerLink="/history" routerLinkActive="active">Exchange Rate History</button>
+    <button mat-button routerLink="/fluctuation" routerLinkActive="active">Exchange Rate Fluctuation</button>
+  </mat-toolbar-row>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/latest">Latest Exchange Rate</button>
+    <button mat-menu-item routerLink="/historical">Historical Exchange Rate</button>
+    <button mat-menu-item routerLink="/convert">Convert Currency</button>
+    <button mat-menu-item routerLink="/history">Exchange Rate History</button>
+    <button mat-menu-item routerLink="/fluctuation">Exchange Rate Fluctuation</button>
+  </mat-menu>
+</mat-toolbar>

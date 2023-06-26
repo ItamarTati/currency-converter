@@ -1,0 +1,32 @@
+.mat-toolbar-row {
+  justify-content: space-between;
+  height: 80px;
+}
+
+.menu-items {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.menu-icon {
+  font-size: 54px;
+  transform: scale(3.5);
+}
+
+span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+button.mat-button {
+  color: white;
+}
+
+.burger-menu {
+  margin-right: 10px;
+}
+
+button.active {
+  background-color: rgb(205, 113, 14);
+  color: white;
+}

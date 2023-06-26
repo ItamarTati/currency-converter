@@ -1,0 +1,13 @@
+<app-currency-form [form]="latestExchangeRateForm" (formSubmit)="getLatestData($event)"></app-currency-form>
+
+<div class="container" *ngIf="latestExchangeRates$ | async as latestExchangeRates; else loading">
+  <div>
+    <app-currency-table class="currency-table-container" [exchangeRates]="latestExchangeRates"></app-currency-table>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

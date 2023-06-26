@@ -1,0 +1,54 @@
+<form [formGroup]="form" class="currency-form" (ngSubmit)="submitForm()">
+  <ng-container *ngIf="form.get('selectedDate') && form.get('selectedSymbols'); else latestForm">
+    <mat-form-field class="date-field">
+      <input matInput [matDatepicker]="picker" formControlName="selectedDate" placeholder="Choose a Date" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="form.get('selectedDate')?.hasError('required')">Date is required</mat-error>
+      <mat-error *ngIf="form.get('selectedDate')?.hasError('futureDate')">
+        You can not select a date in the future or the currrent date you are on
+      </mat-error>
+
+    </mat-form-field>
+
+    <mat-form-field class="symbols-field">
+      <mat-label>Select Symbols</mat-label>
+      <mat-select formControlName="selectedSymbols" multiple [required]="true" class="symbols-select">
+        <mat-select-trigger>
+          {{ form.get('selectedSymbols')?.value?.length ? form.get('selectedSymbols')?.value.join(', ') : 'Select
+          Symbols' }}
+        </mat-select-trigger>
+        <mat-option *ngFor="let symbol of selectSymbols" [value]="symbol.value"
+          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null" class="symbol-option">
+          {{ symbol.display }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('selectedSymbols')?.hasError('required')">Symbol selection is required</mat-error>
+
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="get-data-button" [disabled]="form.invalid">Get
+      Historical Exchange Rates in Euros</button>
+  </ng-container>
+
+  <ng-template #latestForm>
+    <mat-form-field class="currency-field">
+      <mat-label>Select Currency</mat-label>
+      <mat-select formControlName="selectedSymbols" multiple [required]="true" class="currency-select">
+        <mat-select-trigger>
+          {{ form.get('selectedSymbols')?.value?.length ? form.get('selectedSymbols')?.value.join(', ') : 'Select
+          Symbols' }}
+        </mat-select-trigger>
+        <mat-option *ngFor="let symbol of selectSymbols" [value]="symbol.value"
+          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null" class="symbol-option">
+          {{ symbol.display }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('selectedCurrency')?.hasError('required')" class="currency-error">Currency selection is
+        required</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="get-data-button" [disabled]="form.invalid">Get Latest
+      Exchange Rates In Euros</button>
+  </ng-template>
+</form>
