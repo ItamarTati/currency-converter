@@ -12,6 +12,7 @@ export interface ExchangeRatesResponse {
 }
 
 export interface ConvertResponse {
+  success: boolean;
   query: {
     from: string;
     to: string;
@@ -50,4 +51,12 @@ export interface ExchangeRateFluctuationResponse {
       change: number;
     };
   };
+}
+
+export interface FormSubmit {
+  date: Date;
+  symbols: string[];
+  from: string;
+  to: string;
+  amount: number;
 }

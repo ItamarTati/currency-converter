@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { ApiService } from './api.service';
 import {
   ExchangeRatesResponse,
@@ -32,18 +35,20 @@ describe('ApiService', () => {
       symbols: {
         USD: 'United States Dollar',
         EUR: 'Euro',
-        GBP: 'British Pound'
+        GBP: 'British Pound',
       },
-      success: true
+      success: true,
     };
-    service.getSymbols().subscribe(response => {
+    service.getSymbols().subscribe((response) => {
       expect(response).toEqual(mockResponse);
     });
 
-    const request = httpMock.expectOne(request => {
+    const request = httpMock.expectOne((request) => {
       return (
-        request.url === `${service['getApiUrl']()}/symbols?access_key=${service['getAccessKey']()}` &&
-        request.method === 'GET'
+        request.url ===
+          `${service['getApiUrl']()}/symbols?access_key=${service[
+            'getAccessKey'
+          ]()}` && request.method === 'GET'
       );
     });
     request.flush(mockResponse);
@@ -67,7 +72,9 @@ describe('ApiService', () => {
     });
 
     const request = httpMock.expectOne(
-      `${service['getApiUrl']()}/latest?access_key=${service['getAccessKey']()}&symbols=USD,AUD,CAD,PLN,MXN`
+      `${service['getApiUrl']()}/latest?access_key=${service[
+        'getAccessKey'
+      ]()}&symbols=USD,AUD,CAD,PLN,MXN`
     );
     expect(request.request.method).toBe('GET');
     request.flush(mockResponse);
@@ -92,7 +99,9 @@ describe('ApiService', () => {
     });
 
     const request = httpMock.expectOne(
-      `${service['getApiUrl']()}/${date}?access_key=${service['getAccessKey']()}&symbols=USD,AUD,CAD,PLN,MXN`
+      `${service['getApiUrl']()}/${date}?access_key=${service[
+        'getAccessKey'
+      ]()}&symbols=USD,AUD,CAD,PLN,MXN`
     );
     expect(request.request.method).toBe('GET');
     request.flush(mockResponse);
@@ -103,6 +112,7 @@ describe('ApiService', () => {
     const to = 'EUR';
     const amount = 25;
     const mockResponse: ConvertResponse = {
+      success: true,
       query: {
         from,
         to,
@@ -122,7 +132,9 @@ describe('ApiService', () => {
     });
 
     const request = httpMock.expectOne(
-      `${service['getApiUrl']()}/convert?access_key=${service['getAccessKey']()}&from=${from}&to=${to}&amount=${amount}`
+      `${service['getApiUrl']()}/convert?access_key=${service[
+        'getAccessKey'
+      ]()}&from=${from}&to=${to}&amount=${amount}`
     );
     expect(request.request.method).toBe('GET');
     request.flush(mockResponse);
@@ -189,7 +201,9 @@ describe('ApiService', () => {
       });
 
     const request = httpMock.expectOne(
-      `${service['getApiUrl']()}/timeseries?access_key=${service['getAccessKey']()}&start_date=${startDate}&end_date=${endDate}&symbols=USD,AUD,CAD,PLN,MXN`
+      `${service['getApiUrl']()}/timeseries?access_key=${service[
+        'getAccessKey'
+      ]()}&start_date=${startDate}&end_date=${endDate}&symbols=USD,AUD,CAD,PLN,MXN`
     );
     expect(request.request.method).toBe('GET');
     request.flush(mockResponse);
@@ -239,7 +253,9 @@ describe('ApiService', () => {
       });
 
     const request = httpMock.expectOne(
-      `${service['getApiUrl']()}/fluctuation?access_key=${service['getAccessKey']()}&symbols=USD,AUD,CAD,PLN,MXN&start_date=${startDate}&end_date=${endDate}`
+      `${service['getApiUrl']()}/fluctuation?access_key=${service[
+        'getAccessKey'
+      ]()}&symbols=USD,AUD,CAD,PLN,MXN&start_date=${startDate}&end_date=${endDate}`
     );
     expect(request.request.method).toBe('GET');
     request.flush(mockResponse);

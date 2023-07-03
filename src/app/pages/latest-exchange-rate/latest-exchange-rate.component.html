@@ -1,8 +1,18 @@
-<app-currency-form [form]="latestExchangeRateForm" (formSubmit)="getLatestData($event)"></app-currency-form>
+<app-currency-form
+  [form]="latestExchangeRateForm"
+  (formSubmit)="getLatestData($event)"
+  [buttonMessage]="buttonMessage"
+></app-currency-form>
 
-<div class="container" *ngIf="latestExchangeRates$ | async as latestExchangeRates; else loading">
+<div
+  class="container"
+  *ngIf="latestExchangeRates$ | async as latestExchangeRates; else loading"
+>
   <div>
-    <app-currency-table class="currency-table-container" [exchangeRates]="latestExchangeRates"></app-currency-table>
+    <app-currency-table
+      class="currency-table-container"
+      [exchangeRates]="latestExchangeRates"
+    ></app-currency-table>
   </div>
 </div>
 

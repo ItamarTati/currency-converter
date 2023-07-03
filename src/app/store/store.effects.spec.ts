@@ -14,8 +14,8 @@ describe('StoreEffects', () => {
   const errorMessage = 'Error message';
   const snackBarPosition = {
     duration: 5000,
-    verticalPosition: 'top'
-  }
+    verticalPosition: 'top',
+  };
   const mockExchangeRatesResponse = {
     base: 'USD',
     date: '2023-06-25',
@@ -29,18 +29,19 @@ describe('StoreEffects', () => {
   const mockHistoricalExchangeRatesResponse = {
     timeseries: true,
     historical: true,
-    base: "EUR",
-    date: "2013-03-16",
+    base: 'EUR',
+    date: '2013-03-16',
     rates: {
-      "USD": 1.307716,
-      "AUD": 1.256333,
-      "CAD": 1.333812,
-      "PLN": 4.150819,
-      "MXN": 16.259128
-    }
+      USD: 1.307716,
+      AUD: 1.256333,
+      CAD: 1.333812,
+      PLN: 4.150819,
+      MXN: 16.259128,
+    },
   };
 
   const mockConvertResponse = {
+    success: true,
     query: {
       from: 'USD',
       to: 'EUR',
@@ -101,11 +102,24 @@ describe('StoreEffects', () => {
         {
           provide: ApiService,
           useValue: {
-            getLatestExchangeRates: jest.fn(() => of(mockExchangeRatesResponse)),
-            getHistoricalExchangeRates: jest.fn((date: string) => of(mockHistoricalExchangeRatesResponse)),
-            convertCurrency: jest.fn((from: string, to: string, amount: number) => of(mockConvertResponse)),
-            getExchangeRateHistory: jest.fn((startDate: string, endDate: string) => of(mockExchangeRateHistoryResponse)),
-            getExchangeRateFluctuation: jest.fn((startDate: string, endDate: string) => of(mockExchangeRateFluctuationResponse)),
+            getLatestExchangeRates: jest.fn(() =>
+              of(mockExchangeRatesResponse)
+            ),
+            getHistoricalExchangeRates: jest.fn((date: string) =>
+              of(mockHistoricalExchangeRatesResponse)
+            ),
+            convertCurrency: jest.fn(
+              (from: string, to: string, amount: number) =>
+                of(mockConvertResponse)
+            ),
+            getExchangeRateHistory: jest.fn(
+              (startDate: string, endDate: string) =>
+                of(mockExchangeRateHistoryResponse)
+            ),
+            getExchangeRateFluctuation: jest.fn(
+              (startDate: string, endDate: string) =>
+                of(mockExchangeRateFluctuationResponse)
+            ),
           },
         },
         {
@@ -128,15 +142,16 @@ describe('StoreEffects', () => {
         symbols: {
           USD: 'United States Dollar',
           EUR: 'Euro',
-          GBP: 'British Pound'
+          GBP: 'British Pound',
         },
-        success: true
+        success: true,
       };
       actions$ = of(storeActions.getSymbols());
 
-
       effects.getSymbols$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getSymbolsSuccess({ response: symbols }));
+        expect(result).toEqual(
+          storeActions.getSymbolsSuccess({ response: symbols })
+        );
         expect(apiService.getSymbols).toHaveBeenCalled();
         expect(snackBar.open).not.toHaveBeenCalled();
       });
@@ -146,11 +161,14 @@ describe('StoreEffects', () => {
       const error = new Error(errorMessage);
       actions$ = of(storeActions.getSymbols());
 
-
       effects.getSymbols$.subscribe((result) => {
         expect(result).toEqual(storeActions.getSymbolsFailure());
         expect(apiService.getSymbols).toHaveBeenCalled();
-        expect(snackBar.open).toHaveBeenCalledWith(errorMessage, 'Dismiss', snackBarPosition);
+        expect(snackBar.open).toHaveBeenCalledWith(
+          errorMessage,
+          'Dismiss',
+          snackBarPosition
+        );
       });
     });
   });
@@ -161,7 +179,11 @@ describe('StoreEffects', () => {
       actions$ = of(storeActions.getLatestExchangeRates({ symbols }));
 
       effects.getLatestExchangeRates$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getLatestExchangeRatesSuccess({ response: mockExchangeRatesResponse }));
+        expect(result).toEqual(
+          storeActions.getLatestExchangeRatesSuccess({
+            response: mockExchangeRatesResponse,
+          })
+        );
         expect(apiService.getLatestExchangeRates).toHaveBeenCalledWith(symbols);
         expect(snackBar.open).not.toHaveBeenCalled();
       });
@@ -174,7 +196,11 @@ describe('StoreEffects', () => {
       effects.getLatestExchangeRates$.subscribe((result) => {
         expect(result).toEqual(storeActions.getLatestExchangeRatesFailure());
         expect(apiService.getLatestExchangeRates).toHaveBeenCalled();
-        expect(snackBar.open).toHaveBeenCalledWith(errorMessage, 'Dismiss', snackBarPosition);
+        expect(snackBar.open).toHaveBeenCalledWith(
+          errorMessage,
+          'Dismiss',
+          snackBarPosition
+        );
       });
     });
   });
@@ -186,8 +212,14 @@ describe('StoreEffects', () => {
       actions$ = of(storeActions.getHistoricalExchangeRates({ date, symbols }));
 
       effects.getHistoricalExchangeRates$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getHistoricalExchangeRatesSuccess({ response: mockHistoricalExchangeRatesResponse }));
-        expect(apiService.getHistoricalExchangeRates).toHaveBeenCalledWith(date);
+        expect(result).toEqual(
+          storeActions.getHistoricalExchangeRatesSuccess({
+            response: mockHistoricalExchangeRatesResponse,
+          })
+        );
+        expect(apiService.getHistoricalExchangeRates).toHaveBeenCalledWith(
+          date
+        );
         expect(snackBar.open).not.toHaveBeenCalled();
       });
     });
@@ -198,9 +230,17 @@ describe('StoreEffects', () => {
       actions$ = of(storeActions.getHistoricalExchangeRatesFailure());
 
       effects.getHistoricalExchangeRates$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getHistoricalExchangeRatesFailure());
-        expect(apiService.getHistoricalExchangeRates).toHaveBeenCalledWith(date);
-        expect(snackBar.open).toHaveBeenCalledWith(errorMessage, 'Dismiss', snackBarPosition);
+        expect(result).toEqual(
+          storeActions.getHistoricalExchangeRatesFailure()
+        );
+        expect(apiService.getHistoricalExchangeRates).toHaveBeenCalledWith(
+          date
+        );
+        expect(snackBar.open).toHaveBeenCalledWith(
+          errorMessage,
+          'Dismiss',
+          snackBarPosition
+        );
       });
     });
   });
@@ -213,8 +253,14 @@ describe('StoreEffects', () => {
       actions$ = of(storeActions.convertCurrency({ from, to, amount }));
 
       effects.convertCurrency$.subscribe((result) => {
-        expect(result).toEqual(storeActions.convertCurrencySuccess({ response: mockConvertResponse }));
-        expect(apiService.convertCurrency).toHaveBeenCalledWith(from, to, amount);
+        expect(result).toEqual(
+          storeActions.convertCurrencySuccess({ response: mockConvertResponse })
+        );
+        expect(apiService.convertCurrency).toHaveBeenCalledWith(
+          from,
+          to,
+          amount
+        );
         expect(snackBar.open).not.toHaveBeenCalled();
       });
     });
@@ -229,8 +275,16 @@ describe('StoreEffects', () => {
 
       effects.convertCurrency$.subscribe((result) => {
         expect(result).toEqual(storeActions.convertCurrencyFailure());
-        expect(apiService.convertCurrency).toHaveBeenCalledWith(from, to, amount);
-        expect(snackBar.open).toHaveBeenCalledWith(errorMessage, 'Dismiss', snackBarPosition);
+        expect(apiService.convertCurrency).toHaveBeenCalledWith(
+          from,
+          to,
+          amount
+        );
+        expect(snackBar.open).toHaveBeenCalledWith(
+          errorMessage,
+          'Dismiss',
+          snackBarPosition
+        );
       });
     });
   });
@@ -241,11 +295,20 @@ describe('StoreEffects', () => {
       const endDate = '2023-06-30';
       const symbols = ['GBP', 'USD', 'AUD', 'CAD', 'PLN', 'MXN'];
 
-      actions$ = of(storeActions.getExchangeRateHistory({ startDate, endDate, symbols }));
+      actions$ = of(
+        storeActions.getExchangeRateHistory({ startDate, endDate, symbols })
+      );
 
       effects.getExchangeRateHistory$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getExchangeRateHistorySuccess({ response: mockExchangeRateHistoryResponse }));
-        expect(apiService.getExchangeRateHistory).toHaveBeenCalledWith(startDate, endDate);
+        expect(result).toEqual(
+          storeActions.getExchangeRateHistorySuccess({
+            response: mockExchangeRateHistoryResponse,
+          })
+        );
+        expect(apiService.getExchangeRateHistory).toHaveBeenCalledWith(
+          startDate,
+          endDate
+        );
         expect(snackBar.open).not.toHaveBeenCalled();
       });
     });
@@ -258,8 +321,15 @@ describe('StoreEffects', () => {
 
       effects.getExchangeRateHistory$.subscribe((result) => {
         expect(result).toEqual(storeActions.getExchangeRateHistoryFailure());
-        expect(apiService.getExchangeRateHistory).toHaveBeenCalledWith(startDate, endDate);
-        expect(snackBar.open).toHaveBeenCalledWith(errorMessage, 'Dismiss', snackBarPosition);
+        expect(apiService.getExchangeRateHistory).toHaveBeenCalledWith(
+          startDate,
+          endDate
+        );
+        expect(snackBar.open).toHaveBeenCalledWith(
+          errorMessage,
+          'Dismiss',
+          snackBarPosition
+        );
       });
     });
   });
@@ -270,11 +340,20 @@ describe('StoreEffects', () => {
       const endDate = '2023-06-30';
       const symbols = ['GBP', 'USD', 'AUD', 'CAD', 'PLN', 'MXN'];
 
-      actions$ = of(storeActions.getExchangeRateFluctuation({ startDate, endDate, symbols }));
+      actions$ = of(
+        storeActions.getExchangeRateFluctuation({ startDate, endDate, symbols })
+      );
 
       effects.getExchangeRateFluctuation$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getExchangeRateFluctuationSuccess({ response: mockExchangeRateFluctuationResponse }));
-        expect(apiService.getExchangeRateFluctuation).toHaveBeenCalledWith(startDate, endDate);
+        expect(result).toEqual(
+          storeActions.getExchangeRateFluctuationSuccess({
+            response: mockExchangeRateFluctuationResponse,
+          })
+        );
+        expect(apiService.getExchangeRateFluctuation).toHaveBeenCalledWith(
+          startDate,
+          endDate
+        );
         expect(snackBar.open).not.toHaveBeenCalled();
       });
     });
@@ -286,9 +365,18 @@ describe('StoreEffects', () => {
       actions$ = of(storeActions.getExchangeRateFluctuationFailure());
 
       effects.getExchangeRateFluctuation$.subscribe((result) => {
-        expect(result).toEqual(storeActions.getExchangeRateFluctuationFailure());
-        expect(apiService.getExchangeRateFluctuation).toHaveBeenCalledWith(startDate, endDate);
-        expect(snackBar.open).toHaveBeenCalledWith(errorMessage, 'Dismiss', snackBarPosition);
+        expect(result).toEqual(
+          storeActions.getExchangeRateFluctuationFailure()
+        );
+        expect(apiService.getExchangeRateFluctuation).toHaveBeenCalledWith(
+          startDate,
+          endDate
+        );
+        expect(snackBar.open).toHaveBeenCalledWith(
+          errorMessage,
+          'Dismiss',
+          snackBarPosition
+        );
       });
     });
   });

@@ -1,1 +1,32 @@
-<p>convert-currency works!</p>
+<div
+  class="container"
+  *ngIf="convertResponse$ | async as convertResponse; else loading"
+>
+  <div *ngIf="convertResponse.success; else failure">
+    <app-currency-form
+      [form]="currencyConversionForm"
+      (formSubmit)="convertToCurrency($event)"
+      [buttonMessage]="buttonMessage"
+    ></app-currency-form>
+
+    <p>
+      You now have
+      {{
+        convertResponse.query.amount
+          | currency : convertResponse.query.to : "symbol"
+      }}!
+    </p>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-template #failure>
+  <div class="error-container centered-content">
+    <p>Please change your API keys.</p>
+  </div>
+</ng-template>

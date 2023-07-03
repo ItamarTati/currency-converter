@@ -1,54 +1,141 @@
 <form [formGroup]="form" class="currency-form" (ngSubmit)="submitForm()">
-  <ng-container *ngIf="form.get('selectedDate') && form.get('selectedSymbols'); else latestForm">
+  <ng-container *ngIf="form.get('selectedDate') && form.get('selectedSymbols')">
     <mat-form-field class="date-field">
-      <input matInput [matDatepicker]="picker" formControlName="selectedDate" placeholder="Choose a Date" required>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="selectedDate"
+        placeholder="Choose a Date"
+        required
+      />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="form.get('selectedDate')?.hasError('required')">Date is required</mat-error>
+      <mat-error *ngIf="form.get('selectedDate')?.hasError('required')"
+        >Date is required</mat-error
+      >
       <mat-error *ngIf="form.get('selectedDate')?.hasError('futureDate')">
         You can not select a date in the future or the currrent date you are on
       </mat-error>
-
     </mat-form-field>
-
-    <mat-form-field class="symbols-field">
-      <mat-label>Select Symbols</mat-label>
-      <mat-select formControlName="selectedSymbols" multiple [required]="true" class="symbols-select">
-        <mat-select-trigger>
-          {{ form.get('selectedSymbols')?.value?.length ? form.get('selectedSymbols')?.value.join(', ') : 'Select
-          Symbols' }}
-        </mat-select-trigger>
-        <mat-option *ngFor="let symbol of selectSymbols" [value]="symbol.value"
-          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null" class="symbol-option">
-          {{ symbol.display }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="form.get('selectedSymbols')?.hasError('required')">Symbol selection is required</mat-error>
-
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="submit" class="get-data-button" [disabled]="form.invalid">Get
-      Historical Exchange Rates in Euros</button>
   </ng-container>
 
-  <ng-template #latestForm>
-    <mat-form-field class="currency-field">
-      <mat-label>Select Currency</mat-label>
-      <mat-select formControlName="selectedSymbols" multiple [required]="true" class="currency-select">
+  <ng-container *ngIf="form.get('selectedSymbols')">
+    <mat-form-field class="symbols-field">
+      <mat-label>Select Symbols</mat-label>
+      <mat-select
+        formControlName="selectedSymbols"
+        multiple
+        [required]="true"
+        class="symbols-select"
+      >
         <mat-select-trigger>
-          {{ form.get('selectedSymbols')?.value?.length ? form.get('selectedSymbols')?.value.join(', ') : 'Select
-          Symbols' }}
+          {{
+            form.get("selectedSymbols")?.value?.length
+              ? form.get("selectedSymbols")?.value.join(", ")
+              : "Select Symbols"
+          }}
         </mat-select-trigger>
-        <mat-option *ngFor="let symbol of selectSymbols" [value]="symbol.value"
-          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null" class="symbol-option">
+        <mat-option
+          *ngFor="let symbol of selectSymbols"
+          [value]="symbol.value"
+          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null"
+          class="symbol-option"
+        >
           {{ symbol.display }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="form.get('selectedCurrency')?.hasError('required')" class="currency-error">Currency selection is
-        required</mat-error>
+      <mat-error *ngIf="form.get('selectedSymbols')?.hasError('required')"
+        >Symbol selection is required</mat-error
+      >
+    </mat-form-field>
+  </ng-container>
+
+  <ng-container
+    *ngIf="form.get('sourceCurrency') && form.get('destinationCurrency')"
+  >
+    <mat-form-field class="source-field">
+      <mat-label>Source Currency</mat-label>
+      <mat-select
+        formControlName="sourceCurrency"
+        [required]="true"
+        class="source-select"
+      >
+        <mat-select-trigger>
+          {{
+            form.get("sourceCurrency")?.value
+              ? form.get("sourceCurrency")?.value
+              : "Select Currency"
+          }}
+        </mat-select-trigger>
+        <mat-option
+          *ngFor="let symbol of selectSymbols"
+          [value]="symbol.value"
+          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null"
+          class="symbol-option"
+        >
+          {{ symbol.display }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('sourceCurrency')?.hasError('required')"
+        >Source currency is required</mat-error
+      >
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" class="get-data-button" [disabled]="form.invalid">Get Latest
-      Exchange Rates In Euros</button>
-  </ng-template>
+    <mat-form-field class="amount-field">
+      <mat-label>Amount</mat-label>
+      <input
+        matInput
+        formControlName="amount"
+        type="number"
+        placeholder="Enter amount"
+        required
+      />
+      <mat-error *ngIf="form.get('amount')?.hasError('required')"
+        >Amount is required</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field class="destination-field">
+      <mat-label>Destination Currency</mat-label>
+      <mat-select
+        formControlName="destinationCurrency"
+        [required]="true"
+        class="destination-select"
+      >
+        <mat-select-trigger>
+          {{
+            form.get("destinationCurrency")?.value
+              ? form.get("destinationCurrency")?.value
+              : "Select Currency"
+          }}
+        </mat-select-trigger>
+        <mat-option
+          *ngFor="let symbol of selectSymbols"
+          [value]="symbol.value"
+          [attr.selected]="isSymbolSelected(symbol.value) ? 'true' : null"
+          class="symbol-option"
+        >
+          {{ symbol.display }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('destinationCurrency')?.hasError('required')"
+        >Destination currency is required</mat-error
+      >
+      <mat-error
+        *ngIf="form.get('destinationCurrency')?.hasError('sameCurrency')"
+      >
+        Please choose a different destination currency to your source currency
+      </mat-error>
+    </mat-form-field>
+  </ng-container>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    class="get-data-button"
+    [disabled]="form.invalid"
+  >
+    {{ buttonMessage }}
+  </button>
 </form>

@@ -1,6 +1,11 @@
 import { storeReducer, initialState } from './store.reducer';
 import * as StoreActions from './store.actions';
-import { ConvertResponse, ExchangeRatesResponse, ExchangeRateHistoryResponse, ExchangeRateFluctuationResponse } from '../services/api.interface';
+import {
+  ConvertResponse,
+  ExchangeRatesResponse,
+  ExchangeRateHistoryResponse,
+  ExchangeRateFluctuationResponse,
+} from '../services/api.interface';
 
 const mockExchangeRatesResponse: ExchangeRatesResponse = {
   base: 'USD',
@@ -13,6 +18,7 @@ const mockExchangeRatesResponse: ExchangeRatesResponse = {
 };
 
 const mockConvertResponse: ConvertResponse = {
+  success: true,
   query: {
     from: 'USD',
     to: 'EUR',
@@ -78,9 +84,9 @@ describe('storeReducer', () => {
       symbols: {
         USD: 'United States Dollar',
         EUR: 'Euro',
-        GBP: 'British Pound'
+        GBP: 'British Pound',
       },
-      success: true
+      success: true,
     };
     const action = StoreActions.getSymbolsSuccess({ response: symbols });
     const state = storeReducer(initialState, action);
@@ -106,7 +112,9 @@ describe('storeReducer', () => {
   });
 
   it('should set loading to false and latestExchangeRates when getLatestExchangeRatesSuccess action is dispatched', () => {
-    const action = StoreActions.getLatestExchangeRatesSuccess({ response: mockExchangeRatesResponse });
+    const action = StoreActions.getLatestExchangeRatesSuccess({
+      response: mockExchangeRatesResponse,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(false);
@@ -123,14 +131,19 @@ describe('storeReducer', () => {
 
   it('should set loading to true when getHistoricalExchangeRates action is dispatched', () => {
     const symbols = ['GBP', 'USD', 'EUR'];
-    const action = StoreActions.getHistoricalExchangeRates({ date: '2023-06-25', symbols });
+    const action = StoreActions.getHistoricalExchangeRates({
+      date: '2023-06-25',
+      symbols,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(true);
   });
 
   it('should set loading to false and historicalExchangeRates when getHistoricalExchangeRatesSuccess action is dispatched', () => {
-    const action = StoreActions.getHistoricalExchangeRatesSuccess({ response: mockExchangeRatesResponse });
+    const action = StoreActions.getHistoricalExchangeRatesSuccess({
+      response: mockExchangeRatesResponse,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(false);
@@ -146,14 +159,20 @@ describe('storeReducer', () => {
   });
 
   it('should set loading to true when convertCurrency action is dispatched', () => {
-    const action = StoreActions.convertCurrency({ from: 'USD', to: 'EUR', amount: 100 });
+    const action = StoreActions.convertCurrency({
+      from: 'USD',
+      to: 'EUR',
+      amount: 100,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(true);
   });
 
   it('should set loading to false and convertedCurrency when convertCurrencySuccess action is dispatched', () => {
-    const action = StoreActions.convertCurrencySuccess({ response: mockConvertResponse });
+    const action = StoreActions.convertCurrencySuccess({
+      response: mockConvertResponse,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(false);
@@ -170,14 +189,20 @@ describe('storeReducer', () => {
 
   it('should set loading to true when getExchangeRateHistory action is dispatched', () => {
     const symbols = ['GBP', 'USD', 'EUR'];
-    const action = StoreActions.getExchangeRateHistory({ startDate: '2023-06-20', endDate: '2023-06-25', symbols });
+    const action = StoreActions.getExchangeRateHistory({
+      startDate: '2023-06-20',
+      endDate: '2023-06-25',
+      symbols,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(true);
   });
 
   it('should set loading to false and exchangeRateHistory when getExchangeRateHistorySuccess action is dispatched', () => {
-    const action = StoreActions.getExchangeRateHistorySuccess({ response: mockExchangeRateHistoryResponse });
+    const action = StoreActions.getExchangeRateHistorySuccess({
+      response: mockExchangeRateHistoryResponse,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(false);
@@ -194,18 +219,26 @@ describe('storeReducer', () => {
 
   it('should set loading to true when getExchangeRateFluctuation action is dispatched', () => {
     const symbols = ['GBP', 'USD', 'EUR'];
-    const action = StoreActions.getExchangeRateFluctuation({ startDate: '2023-06-01', endDate: '2023-06-30', symbols });
+    const action = StoreActions.getExchangeRateFluctuation({
+      startDate: '2023-06-01',
+      endDate: '2023-06-30',
+      symbols,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(true);
   });
 
   it('should set loading to false and exchangeRateFluctuation when getExchangeRateFluctuationSuccess action is dispatched', () => {
-    const action = StoreActions.getExchangeRateFluctuationSuccess({ response: mockExchangeRateFluctuationResponse });
+    const action = StoreActions.getExchangeRateFluctuationSuccess({
+      response: mockExchangeRateFluctuationResponse,
+    });
     const state = storeReducer(initialState, action);
 
     expect(state.loading).toBe(false);
-    expect(state.exchangeRateFluctuation).toEqual(mockExchangeRateFluctuationResponse);
+    expect(state.exchangeRateFluctuation).toEqual(
+      mockExchangeRateFluctuationResponse
+    );
   });
 
   it('should set loading to false and error to true when getExchangeRateFluctuationFailure action is dispatched', () => {
